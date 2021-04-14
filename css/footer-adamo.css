@@ -1,0 +1,36 @@
+footer {
+  background-color: #000;
+}
+
+footer .bottom-row {
+  color: #fff;
+  text-align: center;
+  padding: 10px 0;
+  display: block;
+}
+
+footer .bottom-row {
+  padding: 0px 0;
+}
+
+footer .bottom-row .row-list {
+  display: inline-flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  list-style-type: none;
+  padding: 0;
+  margin-top: 0.5rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+#footer .bottom-row .row-list>li {
+  position: relative;
+  font-size: .875em;
+  margin: 0 6px;
+}
+
+#footer .bottom-row .row-list>li a:hover {
+  color: white;
+}

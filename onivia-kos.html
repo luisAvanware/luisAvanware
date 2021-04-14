@@ -1,0 +1,171 @@
+<!doctype html>
+<html class="no-js" lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <title>Visualizador Onivia</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:title" content="">
+  <meta property="og:type" content="">
+  <meta property="og:url" content="">
+  <meta property="og:image" content="">
+
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="icon" href="img/kos-o-logo.png">
+  <link rel="stylesheet" type="text/css" href="css/font-awesome/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/scroller.css">
+  <link rel="stylesheet" href="css/footer-kos.css">
+
+  <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+          crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+          crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.14.3/dist/xlsx.full.min.js"></script>
+  <script src="js/vendor/modernizr-3.11.2.min.js"></script>
+  <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="css/filters.css">
+  <link href="https://fonts.cdnfonts.com/css/arial-nova" rel="stylesheet">
+  <style>
+    @import url('https://fonts.cdnfonts.com/css/arial-nova');
+  </style>
+  <script src="js/filters.js"></script>
+
+  <meta name="theme-color" content="#fafafa">
+</head>
+
+<body>
+<div class="container-fluid" id="header-div">
+  <!-- Header -->
+  <div class="page-header container-fluid">
+    <div class="row">
+      <div class="col-md-3" style="margin-top: auto; margin-bottom: auto">
+        <h1><img src="img/onivia.png" alt="logo" /></h1>
+      </div>
+      <div class="col-md-6" id="title-header-div">
+        <h1 id="title-header"><strong>Gestión de la OC (Oferta Comercial)</strong></h1>
+      </div>
+      <!-- Export table to excel -->
+      <div id="xport" style="display: none" class="col-md-3">
+        <h1>
+          <button type="submit" id="editButton" class="btn btn-lg btn-success clearfix" onclick="setEdit();" style="background-color: var(--mainColor); border-color: var(--mainColor); vertical-align: middle;"><span class="fa fa-edit" ></span> Editar</button>
+          <button disabled type="submit" id="xportxlsx" class="btn btn-lg btn-secondary clearfix" onclick="doit('xlsx');" style="vertical-align: middle;"><span class="fa fa-save" ></span> Guardar</button>
+        </h1>
+        <p style="display: none" id="xlsxbtn" class="btn"></p>
+      </div>
+    </div>
+  </div>
+
+  <div id="spinner" class="d-flex justify-content-center">
+    <div class="spinner-border" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+
+  <div class="container-fluid" id="table-cont">
+
+    <!-- Sheets nav -->
+    <div class="w-100 pt-1">
+      <div class="scroller scroller-left float-left mt-2"><i class="fa fa-chevron-left"></i></div>
+      <div class="scroller scroller-right float-right mt-2"><i class="fa fa-chevron-right"></i></div>
+      <div class="wrapper">
+        <nav class="nav nav-tabs list mt-2" id="excel-nav" role="tablist">
+        </nav>
+      </div>
+    </div>
+
+    <!-- Excel table -->
+    <div class="table-responsive">
+      <table id="data-table" class="table table-sm table-hover table-striped"></table>
+    </div>
+
+    <br />
+
+    <!-- Adding row to table form -->
+    <div id="form-div"></div>
+    <br />
+
+  </div>
+
+  <script>
+    var mainColor = "#1DA6AA";
+    var mainColorTransparent = "rgba(29,166,170,.05)";
+    var secondaryColor = "#223E99";
+    var secondaryColorHover = "#182A65";
+    var titleColor = secondaryColor;
+
+    var localUrl = "http://localhost:5000";
+    var herokuUrl = "https://kos-backend.herokuapp.com";
+    var urlUsed = herokuUrl;
+  </script>
+  <script src="js/plugins.js"></script>
+  <script src="js/excel.js"></script>
+  <script src="js/edit.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/sheetnav.js"></script>
+
+</div>
+
+<!-- Save modal -->
+<div class="modal" id="upload-success">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Respuesta del servidor</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Tabla guardada correctamente.
+      </div>
+      <div class="modal-footer">
+        <button type="button" onclick="location.reload(); return false;" class="btn btn-info" data-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete modal -->
+<div class="modal" id="delete-modal">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Eliminar fila</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ¿Estás seguro de que desea eliminar esta fila?
+      </div>
+      <div class="modal-footer">
+        <button type="button" data-dismiss="modal" class="btn" id="cancel">Cancelar</button>
+        <button type="button" data-dismiss="modal" class="btn btn-danger" id="delete">Eliminar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <img src="img/kos-white.png" alt="" class="logo">
+  <nav>
+    <div class="menu-legal-container">
+      <ul id="legal-menu" class="menu">
+        <li><a>©2021 Key Outsourcing Services Group, S.L.</a></li>
+      </ul>
+    </div>
+  </nav>
+</footer>
+
+</body>
+</html>
+
+<!-- KOS Blue color: #1761a0 -->
